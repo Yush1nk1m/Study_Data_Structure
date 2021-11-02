@@ -81,23 +81,6 @@ int count_list(ListNode* head)
     return count;
 }
 
-int sum_list(ListNode* head)
-{
-    int total = 0;
-    for (ListNode* p = head; p != NULL; p = p->link)
-        total += p->data;
-    return total;
-}
-
-int search_count(ListNode* head, element value)
-{
-    int count = 0;
-    for (ListNode* p = head; p != NULL; p = p->link) {
-        if (p->data == value) count++;
-    }
-    return count;
-}
-
 void print_list(ListNode* head)
 {
     for (ListNode* p = head; p != NULL; p = p->link)
@@ -118,10 +101,7 @@ int main(void) {
         scanf("%d", &tmp);
         head = insert_next(&head, tmp);
     }
-    
-    element value;
-    printf("탐색할 값을 입력하시오 : "); scanf("%d", &value);
-    printf("%d는 연결 리스트에서 %d번 나타납니다.\n", value, search_count(head, value));
+    printf("연결 리스트 노드의 개수 : %d\n", count_list(head));
 
     return 0;
 }

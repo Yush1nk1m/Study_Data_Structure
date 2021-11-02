@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define _CRT_SECURE_NO_WARNINGS
+#include <string.h>
 
-typedef int element;
-typedef struct ListNode {   // Node type
+typedef struct {
+    char name[100];
+} element;
+
+typedef struct ListNode {
     element data;
     struct ListNode* link;
 } ListNode;
@@ -22,25 +25,6 @@ ListNode* insert_first(ListNode* head, element value)
     p->link = head;     // copying head pointer's value // (3)
     head = p;           // change head pointer          // (4)
     return head;        // return changed head pointer  // (5)
-}
-
-ListNode* insert_next(ListNode** head, element value)
-{
-    if (*head == NULL) {
-        ListNode* new = (ListNode*)calloc(1, sizeof(ListNode));
-        new->data = value;
-        *head = new;
-        return *head;
-    }
-    else {
-        ListNode* p = (*head);
-        while (p->link != NULL)
-            p = p->link;
-        ListNode* new = (ListNode*)calloc(1, sizeof(ListNode));
-        new->data = value;
-        p->link = new;
-        return *head;
-    }
 }
 
 // insert new node after pre node
@@ -73,55 +57,39 @@ ListNode* delete(ListNode* head, ListNode* pre)
     return head;                // (4)
 }
 
-int count_list(ListNode* head)
-{
-    int count = 0;
-    for (ListNode* p = head; p != NULL; p = p->link)
-        count++;
-    return count;
-}
-
-int sum_list(ListNode* head)
-{
-    int total = 0;
-    for (ListNode* p = head; p != NULL; p = p->link)
-        total += p->data;
-    return total;
-}
-
-int search_count(ListNode* head, element value)
-{
-    int count = 0;
-    for (ListNode* p = head; p != NULL; p = p->link) {
-        if (p->data == value) count++;
-    }
-    return count;
-}
-
 void print_list(ListNode* head)
 {
     for (ListNode* p = head; p != NULL; p = p->link)
-        printf("%d -> ", p->data);
+        printf("%s -> ", p->data.name);
     puts("NULL");
+}
+
+int check_repeat(ListNode* head)
+{
+    for (ListNode* sample = head; sample != NULL; sample = sample->link) {
+        for (ListNode* check = head; check != NULL; check = check->link) {
+            if (!strcmp(check->data.name, sample->data.name)) return 1; // True
+        }
+    }
+    return 0;   // False
 }
 
 int main(void) {
     ListNode* head = NULL;
-    int n;
-    element tmp;
-    do {
-        printf("노드의 개수 : "); scanf("%d", &n);
-    } while (n <= 0);
+
+    element word;
     
-    for (int i = 0; i < n; i++) {
-        printf("노드 #%d 데이터 : ", i + 1);
-        scanf("%d", &tmp);
-        head = insert_next(&head, tmp);
-    }
-    
-    element value;
-    printf("탐색할 값을 입력하시오 : "); scanf("%d", &value);
-    printf("%d는 연결 리스트에서 %d번 나타납니다.\n", value, search_count(head, value));
+    strcpy(word.name, "APPLE");
+    head = insert_first(head, word);
+    print_list(head);
+
+    strcpy(word.name, "KIWI");
+    head = insert_first(head, word);
+    print_list(head);
+
+    strcpy(word.name, "BANANA");
+    head = insert_first(head, word);
+    print_list(head);
 
     return 0;
 }

@@ -30,14 +30,18 @@ ListNode* insert_next(ListNode** head, element value)
         ListNode* new = (ListNode*)calloc(1, sizeof(ListNode));
         new->data = value;
         *head = new;
+        puts("inserted");
         return *head;
     }
     else {
         ListNode* p = (*head);
-        while (p->link != NULL)
+        while (p->link != NULL) {
+            puts("move");
             p = p->link;
+        }
         ListNode* new = (ListNode*)calloc(1, sizeof(ListNode));
         new->data = value;
+        puts("inserted");
         p->link = new;
         return *head;
     }
@@ -73,31 +77,6 @@ ListNode* delete(ListNode* head, ListNode* pre)
     return head;                // (4)
 }
 
-int count_list(ListNode* head)
-{
-    int count = 0;
-    for (ListNode* p = head; p != NULL; p = p->link)
-        count++;
-    return count;
-}
-
-int sum_list(ListNode* head)
-{
-    int total = 0;
-    for (ListNode* p = head; p != NULL; p = p->link)
-        total += p->data;
-    return total;
-}
-
-int search_count(ListNode* head, element value)
-{
-    int count = 0;
-    for (ListNode* p = head; p != NULL; p = p->link) {
-        if (p->data == value) count++;
-    }
-    return count;
-}
-
 void print_list(ListNode* head)
 {
     for (ListNode* p = head; p != NULL; p = p->link)
@@ -117,11 +96,10 @@ int main(void) {
         printf("노드 #%d 데이터 : ", i + 1);
         scanf("%d", &tmp);
         head = insert_next(&head, tmp);
+        print_list(head);
     }
-    
-    element value;
-    printf("탐색할 값을 입력하시오 : "); scanf("%d", &value);
-    printf("%d는 연결 리스트에서 %d번 나타납니다.\n", value, search_count(head, value));
+    printf("생성된 연결 리스트 : ");
+    print_list(head);
 
     return 0;
 }

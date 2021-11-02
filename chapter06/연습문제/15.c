@@ -63,6 +63,32 @@ ListNode* delete_first(ListNode* head)
     return head;            // (4)
 }
 
+ListNode* search_delete(ListNode* head, element value)
+{
+    if (head == NULL) return NULL;
+    while (head->data == value) {
+        ListNode* removed;
+        removed = head;
+        head = removed->link;
+        free(removed);
+    }
+    if (head->link == NULL) return NULL;
+
+    ListNode* fp = head;
+    ListNode* p = head->link;
+    while (p != NULL) {
+        if (p->data == value) {
+            p = p->link;
+            fp->link = p;
+        }
+        else {
+            fp = fp->link;
+            p = p->link;
+        }
+    }
+    return head;
+}
+
 // delete pre-linked node
 ListNode* delete(ListNode* head, ListNode* pre)
 {
@@ -98,6 +124,22 @@ int search_count(ListNode* head, element value)
     return count;
 }
 
+int find_max(ListNode* head)
+{
+    int max = head->data;
+    for (ListNode* p = head->link; p != NULL; p = p->link)
+        if (max < p->data) max = p->data;
+    return max;
+}
+
+int find_min(ListNode* head)
+{
+    int min = head->data;
+    for (ListNode* p = head->link; p != NULL; p = p->link)
+        if (min > p->data) min = p->data;
+    return min;
+}
+
 void print_list(ListNode* head)
 {
     for (ListNode* p = head; p != NULL; p = p->link)
@@ -119,9 +161,7 @@ int main(void) {
         head = insert_next(&head, tmp);
     }
     
-    element value;
-    printf("탐색할 값을 입력하시오 : "); scanf("%d", &value);
-    printf("%d는 연결 리스트에서 %d번 나타납니다.\n", value, search_count(head, value));
+    printf("연결 리스트의 최댓값은 %d, 최솟값은 %d입니다.\n", find_max(head), find_min(head));
 
     return 0;
 }

@@ -63,6 +63,32 @@ ListNode* delete_first(ListNode* head)
     return head;            // (4)
 }
 
+ListNode* search_delete(ListNode* head, element value)
+{
+    if (head == NULL) return NULL;
+    while (head->data == value) {
+        ListNode* removed;
+        removed = head;
+        head = removed->link;
+        free(removed);
+    }
+    if (head->link == NULL) return NULL;
+
+    ListNode* fp = head;
+    ListNode* p = head->link;
+    while (p != NULL) {
+        if (p->data == value) {
+            p = p->link;
+            fp->link = p;
+        }
+        else {
+            fp = fp->link;
+            p = p->link;
+        }
+    }
+    return head;
+}
+
 // delete pre-linked node
 ListNode* delete(ListNode* head, ListNode* pre)
 {
@@ -98,6 +124,49 @@ int search_count(ListNode* head, element value)
     return count;
 }
 
+int find_max(ListNode* head)
+{
+    int max = head->data;
+    for (ListNode* p = head->link; p != NULL; p = p->link)
+        if (max < p->data) max = p->data;
+    return max;
+}
+
+int find_min(ListNode* head)
+{
+    int min = head->data;
+    for (ListNode* p = head->link; p != NULL; p = p->link)
+        if (min > p->data) min = p->data;
+    return min;
+}
+
+ListNode* delete_odd(ListNode* head)
+{
+    for (ListNode* p = head; p != NULL; p = p->link)
+        p->link = p->link->link;
+    return head;
+}
+
+ListNode* alternate(ListNode* headA, ListNode* headB)
+{
+    ListNode* headC = NULL;
+    ListNode *pa = headA, *pb = headB;
+    for (; pa != NULL && pb != NULL; pa = pa->link, pb = pb->link) {
+        headC = insert_next(&headC, pa->data);
+        insert_next(&headC, pb->data);
+    }
+    while (pa != NULL) {
+        insert_next(&headC, pa->data);
+        pa = pa->link;
+    }
+    while (pb != NULL) {
+        insert_next(&headC, pb->data);
+        pb = pb->link;
+    }
+    
+    return headC;
+}
+
 void print_list(ListNode* head)
 {
     for (ListNode* p = head; p != NULL; p = p->link)
@@ -106,22 +175,34 @@ void print_list(ListNode* head)
 }
 
 int main(void) {
-    ListNode* head = NULL;
-    int n;
+    ListNode* headA = NULL;
+    ListNode* headB = NULL;
+    int n1, n2;
     element tmp;
     do {
-        printf("노드의 개수 : "); scanf("%d", &n);
-    } while (n <= 0);
+        printf("A 노드의 개수 : "); scanf("%d", &n1);
+    } while (n1 <= 0);
     
-    for (int i = 0; i < n; i++) {
-        printf("노드 #%d 데이터 : ", i + 1);
+    for (int i = 0; i < n1; i++) {
+        printf("노드 A의 #%d 데이터 : ", i + 1);
         scanf("%d", &tmp);
-        head = insert_next(&head, tmp);
+        headA = insert_next(&headA, tmp);
     }
+    printf("Linked list A : "); print_list(headA);
+
+    do {
+        printf("B 노드의 개수 : "); scanf("%d", &n2);
+    } while (n2 <= 0);
     
-    element value;
-    printf("탐색할 값을 입력하시오 : "); scanf("%d", &value);
-    printf("%d는 연결 리스트에서 %d번 나타납니다.\n", value, search_count(head, value));
+    for (int i = 0; i < n2; i++) {
+        printf("노드 B의 #%d 데이터 : ", i + 1);
+        scanf("%d", &tmp);
+        headB = insert_next(&headB, tmp);
+    }
+    printf("Linked list B : "); print_list(headB);
+
+    ListNode* headC = alternate(headA, headB);
+    printf("alternated linked list : "); print_list(headC);
 
     return 0;
 }
